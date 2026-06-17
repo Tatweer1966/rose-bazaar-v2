@@ -6,3 +6,5 @@ uploads/*
 database/backups/*
 !database/backups/.gitkeep
 .DS_Store
+
+.next/

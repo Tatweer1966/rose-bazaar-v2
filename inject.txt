@@ -1,0 +1,8 @@
+  fastify.get('/vendors/:vendorId/portfolio', async (req, reply) => {
+    const r = await req.server.db.query('SELECT * FROM vendor_portfolio WHERE vendor_id = $1 ORDER BY display_order ASC', [req.params.vendorId]);
+    reply.send({ success: true, data: r.rows });
+  });
+  fastify.get('/vendors/:vendorId/reviews', async (req, reply) => {
+    const r = await req.server.db.query('SELECT * FROM vendor_reviews WHERE vendor_id = $1 AND is_visible = true ORDER BY created_at DESC', [req.params.vendorId]);
+    reply.send({ success: true, data: { reviews: r.rows } });
+  });

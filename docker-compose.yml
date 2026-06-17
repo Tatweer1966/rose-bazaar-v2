@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  rose-frontend:
+    container_name: rose-frontend-v2
+    build: ./frontend
+    ports:
+      - "9003:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:9000
+    depends_on:
+      - rose-backend
+    restart: unless-stopped
+
+  rose-db:
+    image: postgres:15-alpine
+    container_name: rose-db-v2
+    environment:
+      POSTGRES_USER: rosebazaar
+      POSTGRES_PASSWORD: RoseBazaar@2025
+      POSTGRES_DB: rose_bazaar_v2
+    ports:
+      - "5433:5432"
+    volumes:
+      - rose_db_data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+
+  rose-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rose-backend-v2
+    environment:
+      PORT: 9000
+      DATABASE_URL: postgresql://rosebazaar:RoseBazaar@2025@rose-db:5432/rose_bazaar_v2
+      JWT_SECRET: rose-bazaar-v2-jwt-secret-change-me
+      UPLOAD_DIR: /app/uploads
+      NODE_ENV: development
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./backend/src:/app/src
+      - uploads_data:/app/uploads
+    depends_on:
+      - rose-db
+    restart: unless-stopped
+
+  rose-admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    container_name: rose-admin-v2
+    ports:
+      - "9002:9000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:9000
+    depends_on:
+      - rose-backend
+    restart: unless-stopped
+
+volumes:
+  rose_db_data:
+  uploads_data:

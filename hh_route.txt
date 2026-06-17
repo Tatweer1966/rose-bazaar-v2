@@ -1,0 +1,12 @@
+  fastify.get('/happy-hour', async (req, reply) => {
+    try {
+      const { rows } = await req.server.db.query(
+        SELECT vo.*, vp.business_name, vp.business_name_ar, vp.city, vp.cover_image,
+         vp.rating, vp.reviews_count, vp.plan_type, vp.is_featured, vp.id as vendor_id
+         FROM vendor_offers vo JOIN vendor_profiles vp ON vp.id = vo.vendor_id
+         WHERE vo.is_active = true AND vp.vendor_type = 'happy_hour'
+         ORDER BY vp.is_featured DESC, vp.rating DESC
+      );
+      reply.send({ success: true, data: rows.map(r => ({...r, offer_description: r.description || ''})) });
+    } catch(e) { req.log.error(e); reply.code(500).send({ success: false, error: e.message }); }
+  });

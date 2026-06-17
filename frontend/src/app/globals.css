@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+:root {
+  --coral: #FE6972;
+  --gold: #D4AF37;
+  --cream: #FFF8F0;
+}
+
+body { font-family: 'DM Sans', -apple-system, sans-serif; }
+h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', Georgia, serif; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

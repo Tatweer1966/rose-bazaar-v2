@@ -33,6 +33,7 @@ fastify.register(require('./modules/media/routes'), { prefix: '/api/media' });
 fastify.register(require('./modules/listings/routes'), { prefix: '/api/listings' });
 fastify.register(require('./modules/services/routes'), { prefix: '/api/services' });
 fastify.register(require('./modules/venues/routes'), { prefix: '/api/venues' });
+fastify.register(require('./modules/shop/routes'), { prefix: '/api/shop' });
 fastify.get('/api/user/profile', async () => ({ data: { role: 'admin', name: 'Admin' } }));
 fastify.post('/api/user/profile', async () => ({ data: { role: 'admin', name: 'Admin' } }));
 fastify.get('/api/health', async () => ({

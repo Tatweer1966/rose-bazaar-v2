@@ -52,9 +52,7 @@ services:
       dockerfile: Dockerfile
     container_name: rose-admin-v2
     ports:
-      - "9002:9000"
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:9000
+      - "9002:80"
     depends_on:
       - rose-backend
     restart: unless-stopped

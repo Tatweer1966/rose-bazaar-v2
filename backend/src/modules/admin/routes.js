@@ -16,7 +16,7 @@ async function adminRoutes(fastify, options) {
   both('/vendors', async () => { const { rows } = await db.query('SELECT vp.*,sc.name as category_name FROM vendor_profiles vp LEFT JOIN service_categories sc ON sc.id=vp.category_id ORDER BY vp.created_at DESC LIMIT 100'); return { data: rows, total: rows.length }; });
   both('/listings/pending', async () => { const { rows } = await db.query("SELECT vp.*,sc.name as category_name FROM vendor_profiles vp LEFT JOIN service_categories sc ON sc.id=vp.category_id WHERE vp.registration_status='submitted' ORDER BY vp.submitted_at DESC"); return { data: rows, total: rows.length }; });
   both('/pending-services', async () => { const { rows } = await db.query("SELECT vp.*,sc.name as category_name FROM vendor_profiles vp LEFT JOIN service_categories sc ON sc.id=vp.category_id WHERE vp.registration_status='submitted' ORDER BY vp.submitted_at DESC"); return { data: rows, total: rows.length }; });
-  both('/approve/:id', async (req) => { await db.query("UPDATE vendor_profiles SET registration_status='approved',is_verified=true,is_active=true,approved_at=NOW() WHERE id=$1", [req.params.id]); return { message: 'Vendor approved' }; });
+  both('/approve/:id', async (req) => { await db.query("UPDATE vendor_profiles SET registration_status='approved',is_verified=true,is_active=true,approved_at=NOW() WHERE id=$1", [req.params.id]); return { success: true, message: 'Vendor approved' }; });
   both('/listing/:id', async (req) => { const { rows } = await db.query('SELECT vp.*,sc.name as category_name FROM vendor_profiles vp LEFT JOIN service_categories sc ON sc.id=vp.category_id WHERE vp.id=$1', [req.params.id]); return { data: rows[0] }; });
   both('/tickets', async () => { const { rows } = await db.query('SELECT vl.*,vp.business_name as vendor_name FROM vendor_leads vl LEFT JOIN vendor_profiles vp ON vp.id=vl.vendor_id ORDER BY vl.created_at DESC LIMIT 50'); return { data: rows, total: rows.length }; });
   both('/transactions', async () => { const { rows } = await db.query('SELECT fs.*,lp.name as provider_name FROM financing_sessions fs LEFT JOIN loan_providers lp ON lp.id=fs.provider_id ORDER BY fs.created_at DESC LIMIT 50'); return { data: rows, total: rows.length }; });
@@ -185,4 +185,5 @@ module.exports, $2, 'admin')`,
 
 }
 module.exports = adminRoutes;
+
 

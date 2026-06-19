@@ -150,7 +150,9 @@ function StatusBanner({ vendor }: { vendor: any }) {
           <p className="font-bold text-green-800">Account Active — Your listings are live on the marketplace</p>
           <p className="text-sm text-green-600 mt-0.5">Customers can find and contact you</p>
         </div>
-        
+        <Link href={`/services/${vendor.id}`} className="text-sm font-bold px-4 py-2 rounded-xl bg-green-500 text-white hover:bg-green-600 transition shrink-0">
+          View Profile
+        </Link>
       </div>
     );
   }
@@ -519,7 +521,15 @@ export default function VendorDashboard() {
                         </button>
                       );
                     })}
-
+                    <button onClick={() => { setTab("listings"); setShowShopForm(true); }}
+                      className="w-full p-3 rounded-xl text-left flex items-center gap-3 font-semibold text-sm transition"
+                      style={{ background: config.color + "10", color: config.color }}>
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: config.color + "20" }}>
+                        <Plus className="w-4 h-4" />
+                      </div>
+                      Create New Listing
+                      <ChevronRight className="w-4 h-4 ml-auto opacity-50" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -981,5 +991,3 @@ export default function VendorDashboard() {
     </div>
   );
 }
-
-

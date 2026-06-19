@@ -554,7 +554,7 @@ async function routes(fastify, options) {
     try {
       const { rows } = await req.server.db.query(
         `UPDATE vendor_store_items
-         SET status = 'active', is_active = true, updated_at = NOW()
+         SET status = 'active', is_active = true, published_at = NOW(), expires_at = NOW() + INTERVAL '30 days', updated_at = NOW()
          WHERE id = $1 RETURNING *`,
         [req.params.productId]
       );
@@ -636,3 +636,4 @@ async function routes(fastify, options) {
 }
 
 module.exports = routes;
+

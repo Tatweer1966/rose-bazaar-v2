@@ -111,7 +111,7 @@ function InternalNotes({ vendorId }) {
   const [saving,   setSaving]   = useState(false);
 
   useEffect(() => {
-    fetch("/api/admin/vendors/" + vendorId + "/notes")
+    fetch(API + "/admin/vendors/" + vendorId + "/notes")
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d?.success) setNotes(d.data || []); })
       .catch(() => {})
@@ -122,7 +122,7 @@ function InternalNotes({ vendorId }) {
     if (!newNote.trim()) return;
     setSaving(true);
     try {
-      const res = await fetch("/api/admin/vendors/" + vendorId + "/notes", {
+      const res = await fetch(API + "/admin/vendors/" + vendorId + "/notes", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ note: newNote })
       });
@@ -187,7 +187,7 @@ export default function VendorApprovalQueue() {
   async function handleApprove(id) {
     setProcessing(id);
     try {
-      await fetch("/api/admin/approve/" + id);
+      await fetch(API + "/admin/approve/" + id);
       setVendors(prev => prev.map(v => v.id === id ? { ...v, registration_status: "approved", is_verified: true, is_active: true } : v));
       if (selected?.id === id) setSelected(p => p ? { ...p, registration_status: "approved", is_verified: true } : null);
     } finally { setProcessing(null); }
@@ -197,7 +197,7 @@ export default function VendorApprovalQueue() {
     if (!rejectReason) return;
     setProcessing(id);
     try {
-      await fetch("/api/admin/vendors/" + id + "/status", {
+      await fetch(API + "/admin/vendors/" + id + "/status", {
         method: "PUT", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "rejected", reason: rejectReason })
       }).catch(() => {});
@@ -208,7 +208,7 @@ export default function VendorApprovalQueue() {
 
   async function handleSuspend(id) {
     if (!confirm("Suspend this vendor? Their listings will be hidden.")) return;
-    await fetch("/api/admin/vendors/" + id + "/suspend", {
+    await fetch(API + "/admin/vendors/" + id + "/suspend", {
       method: "PUT", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reason: "Suspended by admin" })
     }).catch(() => {});
@@ -219,7 +219,7 @@ export default function VendorApprovalQueue() {
   async function handleRequestChanges(id) {
     if (!changeReasons.length && !changesNote) return;
     const note = [...changeReasons, changesNote].filter(Boolean).join("; ");
-    await fetch("/api/admin/vendors/" + id + "/notes", {
+    await fetch(API + "/admin/vendors/" + id + "/notes", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ note: "Changes requested: " + note })
     }).catch(() => {});
@@ -227,7 +227,7 @@ export default function VendorApprovalQueue() {
   }
 
   async function setVerificationLevel(id, level) {
-    await fetch("/api/admin/vendors/" + id + "/verify", {
+    await fetch(API + "/admin/vendors/" + id + "/verify", {
       method: "PUT", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ verification_level: level })
     }).catch(() => {});
@@ -236,7 +236,7 @@ export default function VendorApprovalQueue() {
   }
 
   async function updateVendorField(id, field, value) {
-    await fetch("/api/admin/vendors/" + id + "/meta", {
+    await fetch(API + "/admin/vendors/" + id + "/meta", {
       method: "PUT", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ [field]: value })
     }).catch(() => {});
@@ -657,5 +657,3 @@ export default function VendorApprovalQueue() {
     </div>
   );
 }
-
-

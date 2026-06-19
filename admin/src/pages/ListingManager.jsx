@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import DataTable from "../components/DataTable";
 
-const API = "http://localhost:9000";
+const API = "";
 
 const STATUSES = {
   pending:  { label: "Pending Review", color: "#f59e0b", bg: "rgba(245,158,11,0.1)",  icon: AlertTriangle },
@@ -575,3 +575,4 @@ export default function ListingManager() {
     </div>
   );
 }
+

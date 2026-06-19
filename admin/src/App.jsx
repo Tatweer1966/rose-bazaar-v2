@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ToastProvider } from "./components/Toast";
 import AdminLayout from "./components/AdminLayout";
@@ -17,6 +17,9 @@ import LeadPipeline from "./pages/LeadPipeline";
 import BrokerAnalytics from "./pages/BrokerAnalytics";
 import FinancialReports from "./pages/FinancialReports";
 import useCmsApi from "./hooks/useCmsApi";
+import { MarketplaceProducts, MarketplaceServices, MarketplaceVenues, MarketplaceHappyHour } from "./pages/MarketplacePages";
+import SponsoredPlacements from "./pages/SponsoredPlacements";
+// in renderPage() switch:
 
 function AppContent() {
   const { isAuthenticated, user, logout } = useAuth();
@@ -62,10 +65,22 @@ function AppContent() {
         return <FinancialReports />;
       case "analytics":
         return <BrokerAnalytics />;
+      case "marketplace-products": return <MarketplaceProducts onNavigate={handleNavigate} />;
+      case "marketplace-services": return <MarketplaceServices onNavigate={handleNavigate} />;
+      case "marketplace-venues":   return <MarketplaceVenues onNavigate={handleNavigate} />;
+      case "marketplace-happyhour":return <MarketplaceHappyHour onNavigate={handleNavigate} />;
+      case "sponsored": return <SponsoredPlacements onNavigate={handleNavigate} />;
       case "listings":
         return <ListingManager />;
       case "media":
         return <MediaManager />;
+      case "reported":
+      case "vendor-list":
+      case "vendors-group":
+      case "marketplace-group":
+      case "moderation-group":
+      case "advertising-group":
+        return <DashboardHome onNavigate={handleNavigate} />;
       case "users":
         return (
           <div style={{
@@ -106,4 +121,8 @@ export default function App() {
     </AuthProvider>
   );
 }
+
+
+
+
 

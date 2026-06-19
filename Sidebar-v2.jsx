@@ -1,8 +1,8 @@
 import { useState } from "react";
 import {
-  MapPin, LayoutDashboard, FileText, Image, Settings, Users, LogOut,
+  LayoutDashboard, FileText, Image, Settings, Users, LogOut,
   ChevronLeft, ChevronRight, ChevronDown, Blocks,
-  ShoppingBag, Flame, Star, Megaphone,
+  ShoppingBag, Building2, Flame, Star, Megaphone,
   Shield, AlertTriangle, MessageSquare, Calendar,
   DollarSign, BarChart3, Receipt, Clock, Package
 } from "lucide-react";
@@ -27,7 +27,7 @@ const NAV = [
     children: [
       { id: "marketplace-products", label: "Products",        icon: ShoppingBag },
       { id: "marketplace-services", label: "Services",        icon: Star        },
-      { id: "marketplace-venues",   label: "Venues",          icon: MapPin      },
+      { id: "marketplace-venues",   label: "Venues",          icon: Building2   },
       { id: "marketplace-happyhour",label: "Happy Hour",      icon: Flame       },
     ]
   },
@@ -197,7 +197,3 @@ export default function Sidebar({ activePage, onNavigate, collapsed, onToggleCol
     </aside>
   );
 }
-
-
-
-

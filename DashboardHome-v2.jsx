@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
-import { Users, DollarSign, MessageSquare, TrendingUp, ShoppingBag, Package, Clock, Star, Crown, Zap, Check, Megaphone, AlertTriangle, CheckCircle, RefreshCw, ArrowUpRight, BarChart3, Flame, Shield, Eye, Receipt } from "lucide-react";
+import {
+  Users, DollarSign, MessageSquare, TrendingUp, ShoppingBag,
+  Building2, Clock, Star, Crown, Zap, Check, Megaphone,
+  AlertTriangle, CheckCircle, RefreshCw, ArrowUpRight,
+  Package, BarChart3, Flame, Shield, Eye, Receipt
+} from "lucide-react";
 
 const API = "/api/cms";
-const ADMIN_API = "/api/admin";
-const SHOP_API = "/api/shop";
 
 const PLAN_COLORS = { TOP: "#D4AF37", PRO: "#6366f1", BASIC: "#22c55e", LITE: "#94a3b8", free: "#94a3b8" };
 
@@ -49,11 +52,11 @@ export default function DashboardHome({ onNavigate }) {
     setLoading(true);
     try {
       const [dashRes, mktRes, vendorRes, shopRes, catsRes] = await Promise.all([
-        fetch("/api/admin/stats/dashboard").then(r => r.ok ? r.json() : null),
-        fetch("/api/admin/stats/marketplace").then(r => r.ok ? r.json() : null),
+        fetch(API + "/admin/stats/dashboard").then(r => r.ok ? r.json() : null),
+        fetch(API + "/admin/stats/marketplace").then(r => r.ok ? r.json() : null),
         fetch(API + "/admin/vendors").then(r => r.ok ? r.json() : null),
-        fetch("/api/shop/admin/products?status=pending").then(r => r.ok ? r.json() : null),
-        fetch("/api/services/categories").then(r => r.ok ? r.json() : null),
+        fetch(API + "/shop/admin/products?status=pending").then(r => r.ok ? r.json() : null),
+        fetch(API + "/services/categories/with-counts").then(r => r.ok ? r.json() : null),
       ]);
       if (dashRes?.success)  setData(dashRes.data);
       if (mktRes?.success)   setMarketplace(mktRes.data);
@@ -104,7 +107,7 @@ export default function DashboardHome({ onNavigate }) {
             {(v.pending_vendors  || 0) > 0 && ` ${v.pending_vendors} vendors awaiting approval.`}
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            {(s.pending_listings || 0) > 0 && <button onClick={() => onNavigate("marketplace-products")} style={{ padding: "6px 12px", borderRadius: 8, border: "none", background: "#FE6972", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>Review Listings</button>}
+            {(s.pending_listings || 0) > 0 && <button onClick={() => onNavigate("listings")} style={{ padding: "6px 12px", borderRadius: 8, border: "none", background: "#FE6972", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>Review Listings</button>}
             {(v.pending_vendors  || 0) > 0 && <button onClick={() => onNavigate("vendor-approvals")} style={{ padding: "6px 12px", borderRadius: 8, border: "none", background: "#f59e0b", color: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>Approve Vendors</button>}
           </div>
         </div>
@@ -143,7 +146,7 @@ export default function DashboardHome({ onNavigate }) {
         <SectionCard title="Shop Products" icon={ShoppingBag} color="#FE6972" onNavigate={onNavigate} page="listings">
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
             <StatBox label="Live"     value={s.active_listings   || 0} good />
-            <StatBox label="Pending"  value={s.pending_listings  || 0} alert={s.pending_listings > 0} onClick={() => onNavigate("marketplace-products")} />
+            <StatBox label="Pending"  value={s.pending_listings  || 0} alert={s.pending_listings > 0} onClick={() => onNavigate("listings")} />
             <StatBox label="Featured" value={s.featured_listings || 0} color="#D4AF37" />
             <StatBox label="Rejected" value={s.rejected_listings || 0} />
           </div>
@@ -160,7 +163,7 @@ export default function DashboardHome({ onNavigate }) {
         </SectionCard>
 
         {/* Venues */}
-        <SectionCard title="Wedding Venues" icon={Package} color="#8b5cf6" onNavigate={onNavigate} page="vendor-list">
+        <SectionCard title="Wedding Venues" icon={Building2} color="#8b5cf6" onNavigate={onNavigate} page="vendor-list">
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
             <StatBox label="Active"    value={mk.venues_active   || 0} good />
             <StatBox label="Pending"   value={mk.venues_pending  || 0} alert={mk.venues_pending > 0} />
@@ -228,7 +231,7 @@ export default function DashboardHome({ onNavigate }) {
                   <div style={{ fontSize: 12, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</div>
                   <div style={{ fontSize: 10, color: "#94a3b8" }}>{p.category_name} · EGP {Number(p.price).toLocaleString()}</div>
                 </div>
-                <button onClick={() => onNavigate("marketplace-products")} style={{ padding: "3px 8px", borderRadius: 5, border: "none", background: "rgba(34,197,94,0.1)", color: "#22c55e", cursor: "pointer", fontSize: 10, fontWeight: 700, whiteSpace: "nowrap" }}>Review</button>
+                <button onClick={() => onNavigate("listings")} style={{ padding: "3px 8px", borderRadius: 5, border: "none", background: "rgba(34,197,94,0.1)", color: "#22c55e", cursor: "pointer", fontSize: 10, fontWeight: 700, whiteSpace: "nowrap" }}>Review</button>
               </div>
             ))}
         </SectionCard>
@@ -243,7 +246,7 @@ export default function DashboardHome({ onNavigate }) {
           </div>
           <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 8, background: "linear-gradient(135deg,rgba(212,175,55,0.08),rgba(99,102,241,0.08))", border: "1px solid rgba(212,175,55,0.15)" }}>
             <div style={{ fontSize: 10, color: "#94a3b8", marginBottom: 4 }}>Subscription Plans</div>
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", gap: 10" }}>
               {[["TOP","#D4AF37",v.top_plan_vendors||0],["PRO","#6366f1",v.pro_plan_vendors||0],["BASIC","#22c55e",0],["LITE","#94a3b8",0]].map(([plan,color,count]) => (
                 <div key={plan} style={{ flex: 1, textAlign: "center" }}>
                   <div style={{ fontSize: 14, fontWeight: 800, color }}>{count}</div>
@@ -338,7 +341,7 @@ export default function DashboardHome({ onNavigate }) {
         : vendors.length === 0
           ? <div style={{ padding: 20, textAlign: "center", color: "#94a3b8", fontSize: 13 }}>No vendors yet</div>
           : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(200px,1fr))", gap: 10" }}>
               {vendors.map((vnd, i) => {
                 const status = vnd.registration_status || vnd.status;
                 const statusColor = { approved: "#22c55e", submitted: "#f59e0b", rejected: "#ef4444" }[status] || "#94a3b8";
@@ -361,10 +364,3 @@ export default function DashboardHome({ onNavigate }) {
     </div>
   );
 }
-
-
-
-
-
-
-
